@@ -12,24 +12,31 @@ exports.create = (text, callback) => {
     if (err) {
       throw ('error writing counter');
     } else {
-      fs.writeFile(exports.dataDir + '/' + id + '.txt', text, (err) => {
+      // items[id] = text;
+      fs.writeFile(path.join(exports.dataDir, id + '.txt'), text, (err) => {
         if (err) {
-          throw ('error writing counter');
+          throw (err);
         } else {
           callback(null, { id, text });
         }
       });
+
     }
   });
+
 };
 
 exports.readAll = (callback) => {
   fs.readdir(exports.dataDir, (err, files) => {
-    var data = _.map(files, (file) => {
-      var id = file.split('.')[0];
-      return { id, text: id };
-    });
-    callback(null, data);
+    if (err) {
+      callback(err);
+    } else {
+      var data = _.map(files, (file) => {
+        var id = file.split('.')[0];
+        return { id, text: id };
+      });
+      callback(null, data);
+    }
   });
 };
 
